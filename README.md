@@ -43,4 +43,6 @@ https://sketchfab.com/3d-models/wii-mr-beans-wacky-world-mr-beans-mini-7332fe160
 https://sketchfab.com/3d-models/lada-riva-1986-300e85f5786f48b3abd5f8ab3851c3a1
 https://sketchfab.com/3d-models/roundabout-31e98b013fa34efa899f7071196e82ba
 
+https://sketchfab.com/3d-models/american-road-intersection-da0ddea1269c4c99a76ae9e6886f2657
+
 https://sketchfab.com/3d-models/underground-garage-door-6380fc0dcb814a22b8ecf0fd33b151b5
