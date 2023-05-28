@@ -11,6 +11,10 @@ npm install --save three
 # vite
 npm install --save-dev vite
 
+# tween.js
+npm install @tweenjs/tween.js
+
+# start
 npx vite
 
 ### Gambar-gambar

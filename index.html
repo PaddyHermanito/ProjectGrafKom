@@ -60,6 +60,7 @@
 	<script type="module">
 
 		import * as THREE from 'three';
+		import * as TWEEN from '@tweenjs/tween.js'
 
 		import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockControls.js';
 		import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -282,7 +283,7 @@
 
 			// Memuat model mobil
 			loaderCar.load(
-				'./gambar/Mobil_mr_bean/scene.gltf', // Ganti dengan path file model mobil Anda
+				'./gambar/Mobil_mr_bean/mobil_terbuka.glb', // Ganti dengan path file model mobil Anda
 				function (gltf) {
 					const car = gltf.scene; // Mengambil objek mobil dari hasil loading
 
@@ -292,6 +293,17 @@
 					car.scale.set(11, 11, 11);
 
 					scene.add(car); // Menambahkan mobil ke dalam scene
+
+					// const door = car.getObjectByName('./gambar/Mobil_mr_bean/pintu_mobil.glb'); // Ganti 'nama_pintu_mobil' dengan nama yang sesuai pada model Anda
+					// if (door) {
+					// 	door.scale.set(11, 11, 11); // Ganti sx, sy, sz dengan skala yang diinginkan
+					// 	// door.scale.set(sx, sy, sz); // Ganti sx, sy, sz dengan skala yang diinginkan
+					// } else {
+					// 	console.error("Objek pintu tidak ditemukan dalam model.");
+					// }
+					car.traverse(function (child) {
+						console.log(child.name);
+					});
 				},
 				undefined,
 				function (error) {
@@ -311,6 +323,19 @@
 
 		}
 
+		function detectDistance() {
+			// ...
+
+			// Atur nilai jarak yang sesuai dan panggil fungsi untuk membuka atau menutup pintu
+			if (distance < 5) {/* nilai jarak tertentu */
+				openDoor();
+			} else {
+				closeDoor();
+			}
+
+			// ...
+		}
+
 		function onWindowResize() {
 
 			camera.aspect = window.innerWidth / window.innerHeight;
@@ -318,6 +343,32 @@
 
 			renderer.setSize(window.innerWidth, window.innerHeight);
 
+		}
+
+		// Fungsi untuk membuka pintu
+		function openDoor() {
+			if (!doorOpen) {
+				// Animasikan pintu terbuka menggunakan Tween.js
+				new TWEEN.Tween(door.rotation)
+					.to({ y: -Math.PI / 2 }, 1000)
+					.easing(TWEEN.Easing.Quadratic.Out)
+					.start();
+
+				doorOpen = true;
+			}
+		}
+
+		// Fungsi untuk menutup pintu
+		function closeDoor() {
+			if (doorOpen) {
+				// Animasikan pintu tertutup menggunakan Tween.js
+				new TWEEN.Tween(door.rotation)
+					.to({ y: 0 }, 1000)
+					.easing(TWEEN.Easing.Quadratic.Out)
+					.start();
+
+				doorOpen = false;
+			}
 		}
 
 		function animate() {
