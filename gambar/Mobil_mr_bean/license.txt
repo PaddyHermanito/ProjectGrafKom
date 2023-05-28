@@ -1,0 +1,11 @@
+Model Information:
+* title:	Wii - Mr Beans Wacky World - Mr Beans Mini
+* source:	https://sketchfab.com/3d-models/wii-mr-beans-wacky-world-mr-beans-mini-7332fe16014e4ad685c83573fa02b590
+* author:	eric.stirbescu (https://sketchfab.com/eric.stirbescu)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Wii - Mr Beans Wacky World - Mr Beans Mini" (https://sketchfab.com/3d-models/wii-mr-beans-wacky-world-mr-beans-mini-7332fe16014e4ad685c83573fa02b590) by eric.stirbescu (https://sketchfab.com/eric.stirbescu) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
