@@ -67,8 +67,7 @@
 
 		let camera, scene, renderer, controls;
 		let door;
-		let doorOpen = false;
-		let car,carDoor;
+		let car, carDoor;
 
 		const objects = [];
 
@@ -290,38 +289,6 @@
 				}
 			);
 
-			function openDoor() {
-				if (!doorOpen) {
-					new TWEEN.Tween(carDoor.rotation)
-						.to({ y: -Math.PI / 2 }, 1000)
-						.easing(TWEEN.Easing.Quadratic.Out)
-						.start();
-
-					doorOpen = true;
-				}
-			}
-
-			function closeDoor() {
-				if (doorOpen) {
-					new TWEEN.Tween(carDoor.rotation)
-						.to({ y: 0 }, 1000)
-						.easing(TWEEN.Easing.Quadratic.Out)
-						.start();
-
-					doorOpen = false;
-				}
-			}
-
-			window.addEventListener('keydown', function (event) {
-				if (event.keyCode === 69) { // 'E' key to approach the door
-					const distance = controls.getObject().position.distanceTo(carDoor.position);
-
-					if (distance < 5) {
-						openDoor();
-					}
-				}
-			});
-
 			renderer = new THREE.WebGLRenderer({ antialias: true });
 			renderer.setPixelRatio(window.devicePixelRatio);
 			renderer.setSize(window.innerWidth, window.innerHeight);
@@ -342,9 +309,70 @@
 
 		}
 
+		var doorOpen = false;
+
+		function animateDoor(distance) {
+			if (distance < 30 && !doorOpen) {
+				// Jika jarak kurang dari 30 dan pintu belum terbuka, buka pintu
+				new TWEEN.Tween(carDoor.rotation)
+					.to({ y: -Math.PI / 4 }, 500) // Mengubah rotasi pintu menjadi -45 derajat dalam 500 milidetik
+					// .to({ y: 21 }, 500) // Mengubah rotasi pintu menjadi -45 derajat dalam 500 milidetik
+					.easing(TWEEN.Easing.Quadratic.InOut)
+					.start()
+				// .onComplete(function () {
+				// 	// carDoor.position.x = 5;
+				// 	carDoor.position.z = 21;
+				// 	// carDoor.rotation.y = -45;
+				// 	carDoor.rotation.y = -Math.PI / 4;
+				// });
+
+				new TWEEN.Tween(carDoor.position)
+					.to({ x: 5, z: 21 }, 500)
+					// .to({ z: 21 }, 1000)
+					.easing(TWEEN.Easing.Quadratic.InOut)
+					.start();
+				doorOpen = true;
+				// renderer.render(scene, camera);
+			} else if (distance >= 30 && doorOpen) {
+				// Jika jarak lebih dari atau sama dengan 30 dan pintu terbuka, tutup pintu
+				new TWEEN.Tween(carDoor.rotation)
+					.to({ y: 0 }, 500) // Mengubah rotasi pintu menjadi 0 derajat dalam 500 milidetik
+					.easing(TWEEN.Easing.Quadratic.InOut)
+					.start()
+				// .onComplete(function () {
+				// 	carDoor.position.x = 0.65;
+				// 	carDoor.position.z = 20.65;
+				// 	carDoor.rotation.y = 0;
+				// });
+
+				new TWEEN.Tween(carDoor.position)
+					.to({ x: 0.65, z: 20.65 }, 500)
+					// .to({ z: 20.65 }, 1000)
+					// .to({ x: 0.65 }, 1000)
+					.easing(TWEEN.Easing.Quadratic.InOut)
+					.start();
+				doorOpen = false;
+				// renderer.render(scene, camera);
+			}
+		}
+
+		var canEnterCar = false;
+		var isInsideCar = false;
+		var initialPosition;
+
+		function checkEnterCar() {
+			const distance = controls.getObject().position.distanceTo(car.position);
+			if (distance < 30 && !isInsideCar) {
+				canEnterCar = true;
+			}
+		}
+
+
 		function animate() {
 
 			requestAnimationFrame(animate);
+
+			TWEEN.update()
 
 			const time = performance.now();
 
@@ -382,16 +410,16 @@
 				// car.translateX(velocity.x * delta);
 				// carDoor.translateX(velocity.x * delta);
 
-				controls.moveForward(- velocity.z * delta );
+				controls.moveForward(- velocity.z * delta);
 				// car.translateZ(- velocity.z * delta );
 				// carDoor.translateZ(- velocity.z * delta );
 
 				controls.getObject().position.y += (velocity.y * delta); // new behavior
 
-				if (controls.getObject().position.y < 15.5) {
+				if (controls.getObject().position.y < 17) {
 
 					velocity.y = 0;
-					controls.getObject().position.y = 15.5;
+					controls.getObject().position.y = 17;
 
 					canJump = true;
 
@@ -399,18 +427,34 @@
 
 				const distance = controls.getObject().position.distanceTo(car.position);
 
-				
+				// TWEEN.update();
+				animateDoor(distance);
+
+				if (canEnterCar) {
+					controls.getObject().position.set(-5, 15.5, 20);
+					// Lakukan penyesuaian lain yang diperlukan
+
+					canEnterCar = false;
+				}
+
+				if (isInsideCar) {
+					// Logika saat berada dalam mobil
+				} else {
+					// Logika saat di luar mobil
+					const distance = controls.getObject().position.distanceTo(car.position);
+					canEnterCar = distance < 5;
+				}
 				// 0.65, 3.5, 20.65
 				// buka tutup buka tutup ini apa?
-				if (distance < 30) {
-					carDoor.position.x = 5;
-					carDoor.position.z = 21;
-					carDoor.rotation.y = -45;
-				} else {
-					carDoor.position.x = 0.65;
-					carDoor.position.z = 20.65;
-					carDoor.rotation.y = 0;
-				}
+				// if (distance < 30) {
+				// 	carDoor.position.x = 5;
+				// 	carDoor.position.z = 21;
+				// 	carDoor.rotation.y = -45;
+				// } else {
+				// 	carDoor.position.x = 0.65;
+				// 	carDoor.position.z = 20.65;
+				// 	carDoor.rotation.y = 0;
+				// }
 			}
 
 			prevTime = time;
@@ -419,6 +463,12 @@
 
 		}
 
+		// Panggil fungsi checkEnterCar() saat tombol "E" ditekan
+		document.addEventListener('keydown', function (event) {
+			if (event.keyCode === 69) {
+				checkEnterCar();
+			}
+		});
 	</script>
 </body>
 
