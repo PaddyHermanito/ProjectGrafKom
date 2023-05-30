@@ -360,13 +360,32 @@
 		var isInsideCar = false;
 		var initialPosition;
 
+		var moveCarForward = false;
+		var moveCarBackward = false;
+		var moveCarLeft = false;
+		var moveCarRight = false;
+
 		function checkEnterCar() {
 			const distance = controls.getObject().position.distanceTo(car.position);
 			if (distance < 30 && !isInsideCar) {
 				canEnterCar = true;
 			}
 		}
-
+		function enterCar() {
+			initialPosition = controls.getObject().position.clone(); // Simpan posisi awal sebelum masuk ke dalam mobil
+			controls.getObject().position.set(-5, 15.5, 20);
+			// Lakukan penyesuaian lain yang diperlukan saat masuk ke dalam mobil
+			isInsideCar = true;
+			console.log("Masuk mobil");
+		}
+		function exitCar() {
+			if (isInsideCar) {
+				controls.getObject().position.copy(initialPosition); // Kembalikan posisi karakter ke posisi awal sebelum masuk mobil
+				// Lakukan penyesuaian lain yang diperlukan saat keluar dari mobil
+				isInsideCar = false;
+				console.log("Keluar dari mobil");
+			}
+		}
 
 		function animate() {
 
@@ -431,14 +450,17 @@
 				animateDoor(distance);
 
 				if (canEnterCar) {
-					controls.getObject().position.set(-5, 15.5, 20);
+					// controls.getObject().position.set(-5, 15.5, 20);
 					// Lakukan penyesuaian lain yang diperlukan
 
+					enterCar()
 					canEnterCar = false;
 				}
 
 				if (isInsideCar) {
 					// Logika saat berada dalam mobil
+					car.translateX(velocity.x * delta);
+					car.translateZ(-velocity.z * delta);
 				} else {
 					// Logika saat di luar mobil
 					const distance = controls.getObject().position.distanceTo(car.position);
@@ -465,8 +487,50 @@
 
 		// Panggil fungsi checkEnterCar() saat tombol "E" ditekan
 		document.addEventListener('keydown', function (event) {
-			if (event.keyCode === 69) {
-				checkEnterCar();
+			if (event.code === "KeyE") {
+				if (isInsideCar) {
+					// Logika saat berada dalam mobil
+					exitCar();
+				} else {
+					// Logika saat di luar mobil
+					checkEnterCar();
+				}
+			} if (isInsideCar) {
+				// Logika saat berada dalam mobil
+				switch (event.code) {
+					case "KeyW":
+						moveForward = true;
+						break;
+					case "KeyA":
+						moveLeft = true;
+						break;
+					case "KeyS":
+						moveBackward = true;
+						break;
+					case "KeyD":
+						moveRight = true;
+						break;
+				}
+			}
+		});
+
+		document.addEventListener('keyup', function (event) {
+			if (isInsideCar) {
+				// Logika saat berada dalam mobil
+				switch (event.code) {
+					case "KeyW":
+						moveForward = false;
+						break;
+					case "KeyA":
+						moveLeft = false;
+						break;
+					case "KeyS":
+						moveBackward = false;
+						break;
+					case "KeyD":
+						moveRight = false;
+						break;
+				}
 			}
 		});
 	</script>
