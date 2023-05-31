@@ -464,14 +464,14 @@
 					canEnterCar = false;
 				}
 				if (isInsideCar) {
-					const accelerationFactor = 2.0; // Faktor pengali untuk percepatan
-					const decelerationFactor = 2.0; // Faktor pengali untuk perlambatan
-					const maxVelocityFactor = 2.0; // Faktor pengali untuk kecepatan maksimal
+					// const accelerationFactor = 2.0; // Faktor pengali untuk percepatan
+					// const decelerationFactor = 2.0; // Faktor pengali untuk perlambatan
+					// const maxVelocityFactor = 2.0; // Faktor pengali untuk kecepatan maksimal
 
-					// Mengatur variabel percepatan dan perlambatan mobil
-					const acceleration = 10.0 * accelerationFactor; // Percepatan mobil
-					const deceleration = 10.0 * decelerationFactor; // Perlambatan mobil
-					const maxVelocity = 10.0 * maxVelocityFactor; // Kecepatan maksimal mobil
+					// // Mengatur variabel percepatan dan perlambatan mobil
+					// const acceleration = 10.0 * accelerationFactor; // Percepatan mobil
+					// const deceleration = 10.0 * decelerationFactor; // Perlambatan mobil
+					// const maxVelocity = 10.0 * maxVelocityFactor; // Kecepatan maksimal mobil
 
 					// Logika saat berada dalam mobil
 					// carContainer.translateX(velocity.x * delta);
@@ -480,18 +480,24 @@
 					// Mengatur pergerakan mobil hanya jika tombol W atau S ditekan
 					if (moveForward || moveBackward) {
 						// Mengatur kecepatan translasi mobil
+						console.log(moveBackward);
 						const translationSpeed = 400.0;
 						const backwardMultiplier = moveBackward ? -1 : 1;
+						// const directionMultiplier =  moveForward ? 1 : -1;
 
-						// Mengatur percepatan dan perlambatan mobil
-						const accelerationValue = moveForward ? acceleration : -deceleration;
-						velocity.z += accelerationValue * delta * accelerationFactor;
+						// // Mengatur percepatan dan perlambatan mobil
+						// const accelerationValue = moveForward ? acceleration : -deceleration;
+						// velocity.z += accelerationValue * delta * accelerationFactor;
 
-						// Batasi kecepatan maksimal mobil
-						velocity.z = THREE.MathUtils.clamp(velocity.z, -maxVelocity * maxVelocityFactor, maxVelocity * maxVelocityFactor);
+						// // Batasi kecepatan maksimal mobil
+						// velocity.z = THREE.MathUtils.clamp(velocity.z, -maxVelocity * maxVelocityFactor, maxVelocity * maxVelocityFactor);
 
+						// velocity.z = direction.z * translationSpeed * backwardMultiplier * delta;
+						// velocity.z = directionMultiplier * translationSpeed * delta;
 						// Perbarui pergerakan maju/mundur mobil
 						carContainer.translateZ(-velocity.z * backwardMultiplier * delta);
+
+						// carContainer.translateZ(-velocity.z * delta);
 
 						// Mengatur kecepatan rotasi mobil saat berbelok
 						const turnSpeed = 25.0;
