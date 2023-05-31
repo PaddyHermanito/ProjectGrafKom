@@ -69,6 +69,7 @@
 		let door;
 		let car, carDoor;
 		let carContainer = new THREE.Object3D();
+		let carCameraContainer = new THREE.Object3D();
 
 		const objects = [];
 
@@ -358,10 +359,12 @@
 		var moveCarLeft = false;
 		var moveCarRight = false;
 
+		// const carDoorPosition = new THREE.Vector3(0.65, 3.5, 20.65); // Ganti dengan nilai posisi pintu mobil
 		let cameraOffset = new THREE.Vector3(-7.5, 15, 20); // Jarak dan posisi relatif kamera terhadap mobil
+		// let cameraOffset = new THREE.Vector3(-1, 3, 3); // Jarak dan posisi relatif kamera terhadap mobil
 
 		function checkEnterCar() {
-			const distance = controls.getObject().position.distanceTo(car.position);
+			const distance = controls.getObject().position.distanceTo(carContainer.position);
 			if (distance < 30 && !isInsideCar) {
 				canEnterCar = true;
 			}
@@ -375,8 +378,14 @@
 		}
 		function exitCar() {
 			if (isInsideCar) {
-				controls.getObject().position.copy(initialPosition); // Kembalikan posisi karakter ke posisi awal sebelum masuk mobil
+				// controls.getObject().position.copy(initialPosition); // Kembalikan posisi karakter ke posisi awal sebelum masuk mobil
 				// Lakukan penyesuaian lain yang diperlukan saat keluar dari mobil
+				let carPositionOnExit;
+				carPositionOnExit = carContainer.position.clone();
+				const cameraOffsetOnExit = new THREE.Vector3(7, 1, 13); // Sesuaikan offset kamera sesuai keinginan Anda
+				const cameraPositionOnExit = carPositionOnExit.clone().add(cameraOffsetOnExit);
+				controls.getObject().position.copy(cameraPositionOnExit);
+
 				isInsideCar = false;
 				console.log("Keluar dari mobil");
 			}
@@ -385,17 +394,6 @@
 		// Ketika Anda naik mobil dan menyetirnya, simpan posisi mobil saat ini
 		function saveCarPosition() {
 			carPosition.copy(carContainer.position);
-		}
-
-		// Ketika Anda ingin keluar dari mobil dan berada di dekat pintu, atur kembali posisi mobil dan pintu
-		function exitCarNearDoor() {
-			const carPosition = carContainer.position.clone();
-			carPosition.copy(carDoorPosition); // Menyamakan posisi mobil dengan posisi pintu
-			carContainer.position.copy(carPosition);
-			carDoor.position.copy(carPosition);
-
-			// Setelah mengatur posisi, rotasi, dll., Anda dapat memunculkan tampilan dari luar mobil
-			// ...
 		}
 
 		function animate() {
@@ -450,7 +448,7 @@
 
 				}
 
-				const distance = controls.getObject().position.distanceTo(car.position);
+				const distance = controls.getObject().position.distanceTo(carContainer.position);
 
 				// TWEEN.update();
 				animateDoor(distance);
@@ -463,15 +461,51 @@
 					canEnterCar = false;
 				}
 
+				// Buat objek pivot sebagai titik pusat rotasi
+				// const pivot = new THREE.Object3D();
+				// scene.add(pivot); // Tambahkan objek pivot ke scene
+
+				// // Tambahkan mobil sebagai child dari objek pivot
+				// pivot.add(carContainer);
+
 				if (isInsideCar) {
 					// Logika saat berada dalam mobil
-					carContainer.translateX(velocity.x * delta);
-					carContainer.translateZ(-velocity.z * delta);
+					// carContainer.translateX(velocity.x * delta);
+					// carContainer.translateZ(-velocity.z * delta);
 
-					// Mengatur posisi kamera di dalam mobil dengan menggunakan cameraOffset
+					// Mengatur pergerakan mobil hanya jika tombol W atau S ditekan
+					if (moveForward || moveBackward) {
+						// Gerak maju atau mundur
+						carContainer.translateZ(-velocity.z * delta);
+						// Mengatur kecepatan translasi mobil
+						const translationSpeed = 400.0;
+
+						// Mengatur kecepatan rotasi mobil saat berbelok
+						const turnSpeed = 5.0;
+						const rotationDelta = turnSpeed * delta * Math.abs(velocity.z) / translationSpeed;
+
+						if (moveLeft) {
+							// Gerak ke kiri (berbelok)
+							// Gerak ke kiri (berbelok)
+							// pivot.rotation.y += rotationDelta;
+							carContainer.rotation.y += rotationDelta;
+						}
+						if (moveRight) {
+							// Gerak ke kanan (berbelok)
+							// Gerak ke kanan (berbelok)
+							// pivot.rotation.y -= rotationDelta;
+							carContainer.rotation.y -= rotationDelta;
+						}
+					}
+					// // Mengatur posisi kamera di dalam mobil dengan menggunakan cameraOffset
 					const carPosition = carContainer.position.clone();
 					const cameraPosition = carPosition.clone().add(cameraOffset);
 					controls.getObject().position.copy(cameraPosition);
+					// -7.5, 15, 20
+					// controls.getObject().position.set(carContainer.position.x - 7.5, carContainer.position.y + 15, carContainer.position.z + 20);
+
+					// // Mengatur posisi kamera di dalam mobil dengan menggunakan carContainer
+					// controls.getObject().position.copy(carContainer.position);
 
 					// Mengatur rotasi kamera untuk menghadap ke belakang
 					const carRotationY = carContainer.rotation.y;
@@ -483,8 +517,12 @@
 					const distance = controls.getObject().position.distanceTo(car.position);
 					canEnterCar = distance < 5;
 					// controls.enabled = true; // Mengaktifkan kontrol kamera menggunakan mouse
-					exitCarNearDoor()
+
 				}
+
+				// Posisi dan rotasi mobil relatif terhadap objek pivot
+				carContainer.position.set(0, 0, 0);
+				carContainer.rotation.set(0, 0, 0);
 				// 0.65, 3.5, 20.65
 				// buka tutup buka tutup ini apa?
 				// if (distance < 30) {
