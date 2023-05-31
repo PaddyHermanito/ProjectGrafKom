@@ -247,6 +247,9 @@
 			let carPosition = new THREE.Vector3(-5, 5.5, 20); // Ganti dengan posisi awal mobil yang diinginkan
 			let carDoorPosition = new THREE.Vector3(0.65, 3.5, 20.65); // Ganti dengan posisi awal pintu mobil yang diinginkan
 
+			carContainer.add(carCameraContainer)
+			carCameraContainer.position.set(-7.5, 15, 20); // Atur posisi kamera di dalam mobil
+
 			loader.load(
 				'./gambar/jalan/scene.gltf',
 				function (gltf) {
@@ -327,24 +330,24 @@
 			if (distance < 30 && !doorOpen) {
 				// Jika jarak kurang dari 30 dan pintu belum terbuka, buka pintu
 				new TWEEN.Tween(carDoor.rotation)
-					.to({ y: -Math.PI / 4 }, 500) // Mengubah rotasi pintu menjadi -45 derajat dalam 500 milidetik
+					.to({ y: -Math.PI / 4 }, 350) // Mengubah rotasi pintu menjadi -45 derajat dalam 500 milidetik
 					.easing(TWEEN.Easing.Quadratic.InOut)
 					.start()
 
 				new TWEEN.Tween(carDoor.position)
-					.to({ x: 5, z: 21 }, 500)
+					.to({ x: 5, z: 21 }, 350)
 					.easing(TWEEN.Easing.Quadratic.InOut)
 					.start();
 				doorOpen = true;
 			} else if (distance >= 30 && doorOpen) {
 				// Jika jarak lebih dari atau sama dengan 30 dan pintu terbuka, tutup pintu
 				new TWEEN.Tween(carDoor.rotation)
-					.to({ y: 0 }, 500) // Mengubah rotasi pintu menjadi 0 derajat dalam 500 milidetik
+					.to({ y: 0 }, 350) // Mengubah rotasi pintu menjadi 0 derajat dalam 500 milidetik
 					.easing(TWEEN.Easing.Quadratic.InOut)
 					.start()
 
 				new TWEEN.Tween(carDoor.position)
-					.to({ x: 0.65, z: 20.65 }, 500)
+					.to({ x: 0.65, z: 20.65 }, 350)
 					.easing(TWEEN.Easing.Quadratic.InOut)
 					.start();
 				doorOpen = false;
@@ -418,7 +421,7 @@
 				velocity.x -= velocity.x * 7.0 * delta;
 				velocity.z -= velocity.z * 7.0 * delta;
 
-				velocity.y -= 9.8 * 80.0 * delta; // 100.0 = mass
+				velocity.y -= 9.8 * 80.0 * delta; // 80.0 = mass
 
 				direction.z = Number(moveForward) - Number(moveBackward);
 				direction.x = Number(moveRight) - Number(moveLeft);
@@ -460,69 +463,59 @@
 					enterCar()
 					canEnterCar = false;
 				}
-
-				// Buat objek pivot sebagai titik pusat rotasi
-				// const pivot = new THREE.Object3D();
-				// scene.add(pivot); // Tambahkan objek pivot ke scene
-
-				// // Tambahkan mobil sebagai child dari objek pivot
-				// pivot.add(carContainer);
-
 				if (isInsideCar) {
+					const accelerationFactor = 2.0; // Faktor pengali untuk percepatan
+					const decelerationFactor = 2.0; // Faktor pengali untuk perlambatan
+					const maxVelocityFactor = 2.0; // Faktor pengali untuk kecepatan maksimal
+
+					// Mengatur variabel percepatan dan perlambatan mobil
+					const acceleration = 10.0 * accelerationFactor; // Percepatan mobil
+					const deceleration = 10.0 * decelerationFactor; // Perlambatan mobil
+					const maxVelocity = 10.0 * maxVelocityFactor; // Kecepatan maksimal mobil
+
 					// Logika saat berada dalam mobil
 					// carContainer.translateX(velocity.x * delta);
 					// carContainer.translateZ(-velocity.z * delta);
 
 					// Mengatur pergerakan mobil hanya jika tombol W atau S ditekan
 					if (moveForward || moveBackward) {
-						// Gerak maju atau mundur
-						carContainer.translateZ(-velocity.z * delta);
 						// Mengatur kecepatan translasi mobil
 						const translationSpeed = 400.0;
+						const backwardMultiplier = moveBackward ? -1 : 1;
+
+						// Mengatur percepatan dan perlambatan mobil
+						const accelerationValue = moveForward ? acceleration : -deceleration;
+						velocity.z += accelerationValue * delta * accelerationFactor;
+
+						// Batasi kecepatan maksimal mobil
+						velocity.z = THREE.MathUtils.clamp(velocity.z, -maxVelocity * maxVelocityFactor, maxVelocity * maxVelocityFactor);
+
+						// Perbarui pergerakan maju/mundur mobil
+						carContainer.translateZ(-velocity.z * backwardMultiplier * delta);
 
 						// Mengatur kecepatan rotasi mobil saat berbelok
-						const turnSpeed = 5.0;
+						const turnSpeed = 25.0;
 						const rotationDelta = turnSpeed * delta * Math.abs(velocity.z) / translationSpeed;
 
 						if (moveLeft) {
 							// Gerak ke kiri (berbelok)
-							// Gerak ke kiri (berbelok)
-							// pivot.rotation.y += rotationDelta;
 							carContainer.rotation.y += rotationDelta;
 						}
 						if (moveRight) {
 							// Gerak ke kanan (berbelok)
-							// Gerak ke kanan (berbelok)
-							// pivot.rotation.y -= rotationDelta;
 							carContainer.rotation.y -= rotationDelta;
 						}
 					}
-					// // Mengatur posisi kamera di dalam mobil dengan menggunakan cameraOffset
-					const carPosition = carContainer.position.clone();
-					const cameraPosition = carPosition.clone().add(cameraOffset);
-					controls.getObject().position.copy(cameraPosition);
-					// -7.5, 15, 20
-					// controls.getObject().position.set(carContainer.position.x - 7.5, carContainer.position.y + 15, carContainer.position.z + 20);
-
-					// // Mengatur posisi kamera di dalam mobil dengan menggunakan carContainer
-					// controls.getObject().position.copy(carContainer.position);
+					// Mengatur posisi kamera di dalam mobil dengan menggunakan carCameraContainer
+					controls.getObject().position.copy(carCameraContainer.getWorldPosition(new THREE.Vector3()));
 
 					// Mengatur rotasi kamera untuk menghadap ke belakang
-					const carRotationY = carContainer.rotation.y;
-					const cameraRotationY = carRotationY + Math.PI; // Menghadap ke arah belakang
-					controls.getObject().rotation.set(0, cameraRotationY, 0);
-
+					controls.getObject().rotation.set(0, carContainer.rotation.y + Math.PI, 0);
 				} else {
 					// Logika saat di luar mobil
 					const distance = controls.getObject().position.distanceTo(car.position);
 					canEnterCar = distance < 5;
-					// controls.enabled = true; // Mengaktifkan kontrol kamera menggunakan mouse
-
 				}
-
-				// Posisi dan rotasi mobil relatif terhadap objek pivot
-				carContainer.position.set(0, 0, 0);
-				carContainer.rotation.set(0, 0, 0);
 				// 0.65, 3.5, 20.65
 				// buka tutup buka tutup ini apa?
 				// if (distance < 30) {
