@@ -50,3 +50,13 @@ https://sketchfab.com/3d-models/roundabout-31e98b013fa34efa899f7071196e82ba
 https://sketchfab.com/3d-models/american-road-intersection-da0ddea1269c4c99a76ae9e6886f2657
 
 https://sketchfab.com/3d-models/underground-garage-door-6380fc0dcb814a22b8ecf0fd33b151b5
+
+https://sketchfab.com/3d-models/street-light-b7dfecfd2dd34a5d8a67bf3e48666105
+
+https://sketchfab.com/3d-models/small-stylised-bush-a83fd7049a784ca6bc0095e7323451d0
+
+https://sketchfab.com/3d-models/3-pine-bushes-ddac4359daa94d6ea8e98832870b1e0e
+
+https://sketchfab.com/3d-models/bush-1e3321934c41424e9e2c02a24fd00aba
+
+https://sketchfab.com/3d-models/traffic-cone-573feef839d7450cb3e12da9986e7a98
