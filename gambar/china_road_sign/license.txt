@@ -1,0 +1,11 @@
+Model Information:
+* title:	china road sign
+* source:	https://sketchfab.com/3d-models/china-road-sign-5387f48041394023a529198619164c03
+* author:	MJ lee (https://sketchfab.com/factorydottcat)
+
+Model License:
+* license type:	CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)
+* requirements:	Author must be credited. No commercial use. Modified versions can not be distributed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "china road sign" (https://sketchfab.com/3d-models/china-road-sign-5387f48041394023a529198619164c03) by MJ lee (https://sketchfab.com/factorydottcat) licensed under CC-BY-NC-ND-4.0 (http://creativecommons.org/licenses/by-nc-nd/4.0/)

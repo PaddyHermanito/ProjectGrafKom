@@ -242,6 +242,10 @@
 			const loader = new GLTFLoader();
 			const loaderCar = new GLTFLoader();
 			const loaderCarDoor = new GLTFLoader();
+			const loaderTree = new GLTFLoader();
+			const loaderChinaSign = new GLTFLoader()
+			const loaderClosedSign = new GLTFLoader()
+			const loaderBush = new GLTFLoader()
 
 			// Variabel untuk menyimpan posisi mobil
 			let carPosition = new THREE.Vector3(-5, 5.5, 20); // Ganti dengan posisi awal mobil yang diinginkan
@@ -303,6 +307,57 @@
 					console.error(error);
 				}
 			);
+
+			loaderTree.load("./gambar/maple_tree/scene.gltf",
+				function (gltf) {
+					let tree = gltf.scene
+					tree.position.set(-250, 5, -150)
+					tree.scale.set(0.3, 0.3, 0.3)
+					scene.add(tree)
+				},
+				undefined,
+				function (error) {
+					console.error(error);
+				}
+			)
+
+			loaderChinaSign.load("./gambar/china_road_sign/scene.gltf", (gltf) => {
+				let sign = gltf.scene
+				sign.position.set(15, 0, 15)
+				scene.add(sign)
+			},
+				undefined,
+				function (error) {
+					console.error(error);
+				}
+			)
+
+			loaderClosedSign.load("./gambar/police_road_closed_sign/scene.gltf", (gltf) => {
+				let closed = gltf.scene
+				closed.position.set(-45, 22, 500)
+				// closed.rotation.set(0,Math.PI,0)
+				// closed.position.y = 60
+				closed.rotation.y = Math.PI
+				closed.scale.set(0.3, 0.3, 0.3)
+				scene.add(closed)
+			},
+				undefined,
+				function (error) {
+					console.error(error);
+				}
+			)
+
+			loaderBush.load("./gambar/small_stylised_bush/scene.gltf", (gltf) => {
+				let bush = gltf.scene
+				bush.position.set(-150,10,-150)
+				bush.scale.set(0.1,0.1,0.1)
+				scene.add(bush)
+			},
+				undefined,
+				function (error) {
+					console.error(error);
+				}
+				)
 
 			renderer = new THREE.WebGLRenderer({ antialias: true });
 			renderer.setPixelRatio(window.devicePixelRatio);
@@ -480,9 +535,9 @@
 					// Mengatur pergerakan mobil hanya jika tombol W atau S ditekan
 					if (moveForward || moveBackward) {
 						// Mengatur kecepatan translasi mobil
-						console.log("moveBackward", moveBackward);
+						// console.log("moveBackward", moveBackward);
 						const translationSpeed = 400.0;
-						carContainer.translateZ(-velocity.z * delta);
+						carContainer.translateZ(-velocity.z * 2 * delta);
 
 						// carContainer.translateZ(-velocity.z * delta);
 
