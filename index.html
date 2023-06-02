@@ -480,36 +480,34 @@
 					// Mengatur pergerakan mobil hanya jika tombol W atau S ditekan
 					if (moveForward || moveBackward) {
 						// Mengatur kecepatan translasi mobil
-						console.log(moveBackward);
+						console.log("moveBackward", moveBackward);
 						const translationSpeed = 400.0;
-						const backwardMultiplier = moveBackward ? -1 : 1;
-						// const directionMultiplier =  moveForward ? 1 : -1;
-
-						// // Mengatur percepatan dan perlambatan mobil
-						// const accelerationValue = moveForward ? acceleration : -deceleration;
-						// velocity.z += accelerationValue * delta * accelerationFactor;
-
-						// // Batasi kecepatan maksimal mobil
-						// velocity.z = THREE.MathUtils.clamp(velocity.z, -maxVelocity * maxVelocityFactor, maxVelocity * maxVelocityFactor);
-
-						// velocity.z = direction.z * translationSpeed * backwardMultiplier * delta;
-						// velocity.z = directionMultiplier * translationSpeed * delta;
-						// Perbarui pergerakan maju/mundur mobil
-						carContainer.translateZ(-velocity.z * backwardMultiplier * delta);
+						carContainer.translateZ(-velocity.z * delta);
 
 						// carContainer.translateZ(-velocity.z * delta);
 
 						// Mengatur kecepatan rotasi mobil saat berbelok
 						const turnSpeed = 25.0;
 						const rotationDelta = turnSpeed * delta * Math.abs(velocity.z) / translationSpeed;
+						// const rotationDelta = turnSpeed * delta;
 
 						if (moveLeft) {
 							// Gerak ke kiri (berbelok)
-							carContainer.rotation.y += rotationDelta;
+							// carContainer.rotation.y += rotationDelta;
+							if (moveForward) {
+								carContainer.rotation.y += rotationDelta;
+							} else if (moveBackward) {
+								carContainer.rotation.y -= rotationDelta;
+							}
 						}
 						if (moveRight) {
 							// Gerak ke kanan (berbelok)
-							carContainer.rotation.y -= rotationDelta;
+							// carContainer.rotation.y -= rotationDelta;
+							if (moveForward) {
+								carContainer.rotation.y -= rotationDelta;
+							} else if (moveBackward) {
+								carContainer.rotation.y += rotationDelta;
+							}
 						}
 					}
 					// Mengatur posisi kamera di dalam mobil dengan menggunakan carCameraContainer
