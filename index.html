@@ -349,15 +349,15 @@
 
 			loaderBush.load("./gambar/small_stylised_bush/scene.gltf", (gltf) => {
 				let bush = gltf.scene
-				bush.position.set(-150,10,-150)
-				bush.scale.set(0.1,0.1,0.1)
+				bush.position.set(-150, 10, -150)
+				bush.scale.set(0.1, 0.1, 0.1)
 				scene.add(bush)
 			},
 				undefined,
 				function (error) {
 					console.error(error);
 				}
-				)
+			)
 
 			renderer = new THREE.WebGLRenderer({ antialias: true });
 			renderer.setPixelRatio(window.devicePixelRatio);
