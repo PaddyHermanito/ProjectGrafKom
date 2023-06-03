@@ -385,7 +385,7 @@
 			if (distance < 30 && !doorOpen) {
 				// Jika jarak kurang dari 30 dan pintu belum terbuka, buka pintu
 				new TWEEN.Tween(carDoor.rotation)
-					.to({ y: -Math.PI / 4 }, 350) // Mengubah rotasi pintu menjadi -45 derajat dalam 500 milidetik
+					.to({ y: -Math.PI / 4 }, 350) // Mengubah rotasi pintu menjadi -45 derajat dalam 350 milidetik
 					.easing(TWEEN.Easing.Quadratic.InOut)
 					.start()
 
@@ -397,7 +397,7 @@
 			} else if (distance >= 30 && doorOpen) {
 				// Jika jarak lebih dari atau sama dengan 30 dan pintu terbuka, tutup pintu
 				new TWEEN.Tween(carDoor.rotation)
-					.to({ y: 0 }, 350) // Mengubah rotasi pintu menjadi 0 derajat dalam 500 milidetik
+					.to({ y: 0 }, 350) // Mengubah rotasi pintu menjadi 0 derajat dalam 350 milidetik
 					.easing(TWEEN.Easing.Quadratic.InOut)
 					.start()
 
